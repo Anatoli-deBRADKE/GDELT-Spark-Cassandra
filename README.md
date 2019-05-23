@@ -1,8 +1,8 @@
-Contributors : Raphael Lederman, Anatoli De Bradke, Alexandre Bec, Mael Fabien, Thomas Binetruy
+**Contributors :** *Alexandre Bec, Thomas Binetruy, Anatoli De Bradke, Mael Fabien, Raphael Lederman*
 
 ![alt text](Images/header.png)
 
-# GDELT : A Cassandra resilient architecture
+# <p align="center"> GDELT : A Cassandra resilient architecture </p>
 
 The GDELT Project monitors the world's broadcast, print, and web news from nearly every corner of every country in over 100 languages and identifies the people, locations, organizations, themes, sources, emotions, counts, quotes, images and events driving our global society every second of every day, creating a free open platform for computing on the entire world. With new files uploaded every 15 minutes, GDELT data bases contain more than 700 Gb of zipped data for the single year 2018.
 
@@ -30,10 +30,10 @@ The architecture we have chosen is the following :
 
 Our architecture is composed by one cluster EMR (1 master and 5 slaves) and one cluster EC2 (8 instances).
 
-In our 8 EC2 instances we have : 
+In our 8 EC2 instances we have :
 - 2 Masters nodes with apache-Spark-2.3.2 and apache-Zeppelin-0.8.0
 - 5 Slaves nodes with apache-Spark-2.3.2 and apache-cassandra-3.11.2, including zookeeper installed on 2 of these nodes.
-- The last one is a node created for the resilience of the Master. We Installed zookeeper in it. 
+- The last one is a node created for the resilience of the Master. We Installed zookeeper in it.
 
 The Slaves resilience is automatically handled by the master Spark. The Masters resilience is handled by Zookeper. For the Zookeeper, refer to the ReadMe of this folder : https://github.com/AnthonyHoudaille/Cassandra-GDELT-Queries-AWS/tree/master/Zookeeper
 
@@ -57,7 +57,7 @@ import java.net.URL
 import java.io.File
 import java.io.File
 import java.nio.file.{Files, StandardCopyOption}
-import java.net.HttpURLConnection 
+import java.net.HttpURLConnection
 import org.apache.spark.sql.functions._
 import sqlContext.implicits._
 import org.apache.spark.input.PortableDataStream
@@ -95,7 +95,7 @@ Grab the list of URLs to download the ZIP files from, from the english and the t
 ``` scala
 // Download locally the list of URL
 fileDownloader("http://data.gdeltproject.org/gdeltv2/masterfilelist.txt", "/tmp/masterfilelist.txt") // save the list file to the Spark Master
-fileDownloader("http://data.gdeltproject.org/gdeltv2/masterfilelist-translation.txt", "/tmp/masterfilelist_translation.txt") 
+fileDownloader("http://data.gdeltproject.org/gdeltv2/masterfilelist-translation.txt", "/tmp/masterfilelist_translation.txt")
 ```
 
 Then, put the file that contains the list of the files to download into the S3 bucket :
@@ -129,7 +129,7 @@ list_2018_tot.select("url").repartition(100).foreach( r=> {
 
 ```
 
-We duplicate this task for the translation data. Then, we need to create four data frames : 
+We duplicate this task for the translation data. Then, we need to create four data frames :
 - Mentions in english
 - Events in english
 - Mentions translated
@@ -163,8 +163,8 @@ val mentions_1 = mentionsDF.withColumn("_tmp", $"value").select(
     $"_tmp".getItem(0).as("globaleventid"),
     $"_tmp".getItem(14).as("language")
     )
-    
-// Events 
+
+// Events
 val events_trans_1 = exportDF_trans.withColumn("_tmp", $"value").select(
     $"_tmp".getItem(0).as("globaleventid"),
     $"_tmp".getItem(1).as("day"),
@@ -205,7 +205,7 @@ df_1_1.createOrReplaceTempView("q1_1")
 ```
 
 The requests are then simple to make :
-``` scala 
+``` scala
 z.show(spark.sql(""" SELECT * FROM q1_1 ORDER BY NumArticles DESC LIMIT 10 """))
 ```
 
@@ -232,10 +232,10 @@ We will present in this section the results of the analsis we lead on the Cassan
 3. Number of articles by language
 ![alt text](Images/q1_3.png)
 
-4. Countries which received the most negative articles 
+4. Countries which received the most negative articles
 ![alt text](Images/q3_1.png)
 
-5. Actors or countries that divide the most 
+5. Actors or countries that divide the most
 ![alt text](Images/q4_1.png)
 
 6. Evolution of the relation two countries (Here USA and Israel)
@@ -244,7 +244,7 @@ We will present in this section the results of the analsis we lead on the Cassan
 
 ## 5. Performance
 
-The total zipped files (Mentions, Events, GKG) reached 698.9 Gb on our S3 bucket. 
+The total zipped files (Mentions, Events, GKG) reached 698.9 Gb on our S3 bucket.
 
 ```
 aws s3 ls --summarize --human-readable --recursive s3://telecom-gdelt2018
@@ -278,5 +278,3 @@ Some recent projects on the GDELT Project include :
 - a web interface using CartoDB
 - a further exploration : Time series, ML, DL
 - automate deployment (Ansible, Docker...)
-
-
