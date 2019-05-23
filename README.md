@@ -1,8 +1,10 @@
-**Contributors :** *Alexandre Bec, Thomas Binetruy, Anatoli De Bradke, Mael Fabien, Raphael Lederman*
+
 
 ![alt text](Images/header.png)
 
 # <p align="center"> GDELT : A Cassandra resilient architecture </p>
+
+<p align="center">**Contributors :** *Alexandre Bec, Thomas Binetruy, Anatoli De Bradke, Mael Fabien, Raphael Lederman* </p>
 
 The GDELT Project monitors the world's broadcast, print, and web news from nearly every corner of every country in over 100 languages and identifies the people, locations, organizations, themes, sources, emotions, counts, quotes, images and events driving our global society every second of every day, creating a free open platform for computing on the entire world. With new files uploaded every 15 minutes, GDELT data bases contain more than 700 Gb of zipped data for the single year 2018.
 
